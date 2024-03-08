@@ -4,6 +4,9 @@ public class Player {
     final private String playerName;
     final private String playerJob;
 
+    //Player health during battle
+    private int actualHealth;
+
     //Player stats
     private int level = 1;
     private int health;
@@ -15,7 +18,11 @@ public class Player {
 
     //Player runes
     private int runes = 0;
-    
+
+    //Player Inventory and Current weapon
+    private Weapon[] inventory;
+    private Weapon equippedWeapon;
+
     /** Constructor Method for the Player class.
      * Upon creation, a player is given a name, a job, and a job index.
      * setStatistics() is called to set the player's initial attribute values.
@@ -47,9 +54,9 @@ public class Player {
     }
 
     /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-    *
-    *                      Getter Methods (Display)
-    *
+    *                                                                    *
+    *                      Getter Methods (Display)                      *
+    *                                                                    *
     =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
     //Player attributes
@@ -95,9 +102,9 @@ public class Player {
     }
 
     /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-    *
-    *                    Increment Methods for attributes
-    *
+    *                                                                    *
+    *                   Increment Methods for attributes                 *
+    *                                                                    *
     =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
     public void levelUp(int runeCost){
@@ -127,6 +134,20 @@ public class Player {
 
     public void levelUpFaith() {
         this.faith++;
+    }
+
+    /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    *                                                                    *
+    *                         Battle Methods                             *
+    *                                                                    *
+    =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    public void attackEnemy(Enemy E){
+
+    }
+
+    public void takeDamage(){
+
     }
 
 }
