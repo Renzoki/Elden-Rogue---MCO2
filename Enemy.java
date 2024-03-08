@@ -38,7 +38,8 @@ public class Enemy {
         String[][] ENEMY_NAMES = {{"Godrick Soldier", "Godrick Archer", "Godrick Knight"},
                 {"Living Jar", "Glintstone Sorcerer", "Battle Mage"}};
 
-        this.enemyName = ENEMY_NAMES[areaIndex][enemyType];
+        //Area index is either 1 or 2
+        this.enemyName = ENEMY_NAMES[areaIndex - 1][enemyType];
     }
 
     //Set Enemy Health
@@ -81,6 +82,17 @@ public class Enemy {
         return damage;
     }
 
-    //TO-DO: Enemy Attack
+    /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    *                                                                    *
+    *                         Battle Methods                             *
+    *                                                                    *
+    =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+    public void attackPlayer(Player P){
+
+    }
+
+    public void takeDamage(int damage){
+        this.health -= damage;
+    }
 }
