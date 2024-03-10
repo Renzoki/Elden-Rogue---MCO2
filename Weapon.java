@@ -22,10 +22,10 @@ public class Weapon {
      * Upon creation, a weapon is given a name, a cost, and a dexterity requirement.
      * The rest of the weapon's statistics are also set and cannot be changed later.
      */
-    public Weapon(String name, int DexReuirement, int cost, int HP, int END, int STR, int INT, int FTH){
+    public Weapon(String name, int DexRequirement, int cost, int HP, int END, int STR, int INT, int FTH){
         this.weaponName = name;
         this.weaponCost = cost;
-        this.DEX_Requirement = DexReuirement;
+        this.DEX_Requirement = DexRequirement;
         this.weapon_HP = HP;
         this.weapon_END = END;
         this.weapon_STR = STR;
@@ -38,6 +38,10 @@ public class Weapon {
     *                         Getter Methods                             *
     *                                                                    *
     =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    public String getWeaponName(){
+        return weaponName;
+    }
 
     public int getDEX_Requirement() {
         return DEX_Requirement;
