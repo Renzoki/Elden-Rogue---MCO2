@@ -1,11 +1,15 @@
+import java.util.HashMap;
+import java.util.List;
+
 public class Player {
 
     //Player display attributes
     final private String playerName;
     final private String playerJob;
 
-    //Player health during battle
-    private int actualHealth;
+    //Player health and dodge chance
+    private int battleHealth;
+    private int dodgeChance;
 
     //Player stats
     private int level = 1;
@@ -20,7 +24,7 @@ public class Player {
     private int runes = 0;
 
     //Player Inventory and Current weapon
-    private Weapon[] inventory;
+    private List<Weapon> inventory;
     private Weapon equippedWeapon;
 
     /** Constructor Method for the Player class.
@@ -55,7 +59,7 @@ public class Player {
 
     /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     *                                                                    *
-    *                      Getter Methods (Display)                      *
+    *                           Getter Methods                           *
     *                                                                    *
     =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
@@ -101,11 +105,25 @@ public class Player {
         return faith;
     }
 
+    //Player Battle Values
+    public int getBattleHealth(){
+        return battleHealth;
+    }
+
+    public int getDodgeChance(){
+        return dodgeChance;
+    }
+
     /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     *                                                                    *
-    *                   Increment Methods for attributes                 *
+    *                       Buy and Level-Up Methods                     *
     *                                                                    *
     =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    public void buyWeapon(Weapon W, int runeCost){
+        this.inventory.add(W);
+        this.runes -= runeCost;
+    }
 
     public void levelUp(int runeCost){
         this.level++;
@@ -142,12 +160,25 @@ public class Player {
     *                                                                    *
     =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    public void attackEnemy(Enemy E){
-
+    //Set at the very first instance of a battle in an area
+    public void setBattleHealth(){
+        this.battleHealth = 100 * (health + equippedWeapon.getWeapon_HP()) / 2;
     }
 
-    public void takeDamage(){
+    public void attackEnemy(Enemy E, String atkType){
+        switch (atkType) {
+            case "PHYSICAL" -> E.takeDamage((int)((strength + equippedWeapon.getWeapon_STR()) * E.getPhysicalDefense()));
+            case "SORCERY" -> E.takeDamage((int)((intelligence + equippedWeapon.getWeapon_INT()) * E.getSorceryDefense()));
+            case "INCANTATION" -> E.takeDamage((int)((faith + equippedWeapon.getWeapon_FTH()) * E.getIncantationDefense()));
+        }
+    }
 
+    public void takeDamage(int damage){
+        this.battleHealth -= damage;
+    }
+
+    public void setDodgeChance(){
+        this.dodgeChance =  20 + (endurance + equippedWeapon.getWeapon_END() / 2) / 100;
     }
 
 }
