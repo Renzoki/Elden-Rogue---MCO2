@@ -4,15 +4,16 @@ public class Enemy {
 
     //Display
     private String enemyName; //Enemy name
-    private int areaIndex; //From where the enemy is from
-    private int enemyType; //From where the enemy is from
+    private final int areaIndex; //From where the enemy is from
+    private final int enemyType; //From where the enemy is from
 
     //Enemy Stats
+    private int runeDrop; //Enemy drops
     private int health; //Enemy health points
     private int damage; //Enemy damage
-    private int phyDef; //Physical defense
-    private int sorDef; //Sorcery defense
-    private int incDef; //Incantation defense
+    private double phyDef; //Physical defense
+    private double sorDef; //Sorcery defense
+    private double incDef; //Incantation defense
 
     public Enemy(int areaIndex){
         Random R = new Random();
@@ -22,7 +23,9 @@ public class Enemy {
 
         setName();
         setHealth();
+        setDefense();
         setDamage();
+        this.runeDrop = health * 2;
     }
 
     /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -53,6 +56,18 @@ public class Enemy {
         this.health = ENEMY_HP_VALUES[enemyType][R.nextInt(2)];
     }
 
+    //Set Enemy Defense
+    private void setDefense(){
+
+        //Row is Enemy type, and the values in the columns are
+        //Physical, Sorcery, and Incantation defense respectively.
+        double[][] ENEMY_DEFENSE = {{0.20, 0.15, 0.10}, {0.50, 0.15, 0.20}, {0.25, 0.25, 0.20}};
+
+        this.phyDef = ENEMY_DEFENSE[enemyType][0];
+        this.sorDef = ENEMY_DEFENSE[enemyType][1];
+        this.incDef = ENEMY_DEFENSE[enemyType][2];
+    }
+
     //Sets Enemy Damage
     private void setDamage(){
 
@@ -66,7 +81,7 @@ public class Enemy {
 
     /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     *                                                                    *
-    *                      Getter Methods (Display)                      *
+    *                           Getter Methods                           *
     *                                                                    *
     =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
@@ -82,6 +97,18 @@ public class Enemy {
         return damage;
     }
 
+    public double getPhysicalDefense(){
+        return phyDef;
+    }
+
+    public double getSorceryDefense(){
+        return sorDef;
+    }
+
+    public double getIncantationDefense(){
+        return incDef;
+    }
+
     /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     *                                                                    *
     *                         Battle Methods                             *
@@ -89,10 +116,17 @@ public class Enemy {
     =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
     public void attackPlayer(Player P){
-
+        setDamage();
+        P.takeDamage(damage);
     }
 
     public void takeDamage(int damage){
         this.health -= damage;
+    }
+
+    //Returns true if the player cannot dodge
+    public boolean checkDodgeChance(Player P){
+        Random R = new Random();
+        return R.nextInt(101) > P.getDodgeChance();
     }
 }
