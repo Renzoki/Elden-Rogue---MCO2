@@ -3,28 +3,27 @@ import java.util.List;
 public class Player {
 
     //Player display attributes
-    final private String playerName;
-    final private String playerJob;
+    protected String playerName;
+    protected String playerJob;
 
-    //Player health and dodge chance
-    private int battleHealth;
-    private int dodgeChance;
+    //Player battle health
+    protected int battleHealth;
 
     //Player stats
-    private int level = 1;
-    private int health;
-    private int dexterity;
-    private int intelligence;
-    private int endurance;
-    private int strength;
-    private int faith;
+    protected int level = 1;
+    protected int health;
+    protected int dexterity;
+    protected int intelligence;
+    protected int endurance;
+    protected int strength;
+    protected int faith;
 
     //Player runes
-    private int runes = 0;
+    protected int runes = 0;
 
     //Player Inventory and Current weapon
-    private List<Weapon> inventory;
-    private Weapon equippedWeapon;
+    protected List<Weapon> inventory;
+    protected Weapon equippedWeapon;
 
     /** Constructor Method for the Player class.
      * Upon creation, a player is given a name, a job, and a job index.
@@ -34,26 +33,7 @@ public class Player {
         this.playerName = name;
         this.playerJob = job;
 
-        setStatistics(jobIndex); //Set the player's HP, DEX, INT, END, STR, FTH
-    }
-
-    /**
-     * This method sets the player's attributes based on their chosen job class.
-     */
-     private void setStatistics(int jobIndex) {
-        int[] HP = new int[]{15, 12, 11, 14, 9, 10};
-        int[] DEX = new int[]{13, 15, 16, 9, 12, 10};
-        int[] INT = new int[]{9, 9, 10, 7, 16, 7};
-        int[] END = new int[]{11, 13, 11, 12, 9, 8};
-        int[] STR = new int[]{14, 12, 10, 16, 8, 11};
-        int[] FTH = new int[]{9, 8, 8, 8, 7, 16};
-
-        this.health = HP[jobIndex];
-        this.dexterity = DEX[jobIndex];
-        this.intelligence = INT[jobIndex];
-        this.endurance = END[jobIndex];
-        this.strength = STR[jobIndex];
-        this.faith = FTH[jobIndex];
+        new JobStats(this, jobIndex);//Set the player's HP, DEX, INT, END, STR, FTH
     }
 
     /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -109,19 +89,57 @@ public class Player {
         return battleHealth;
     }
 
-    public int getDodgeChance(){
-        return dodgeChance;
+    /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    *                                                                    *
+    *                           Setter Methods                           *
+    *                                                                    *
+    =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void setDexterity(int dexterity) {
+        this.dexterity = dexterity;
+    }
+
+    public void setIntelligence(int intelligence) {
+        this.intelligence = intelligence;
+    }
+
+    public void setEndurance(int endurance) {
+        this.endurance = endurance;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public void setFaith(int faith) {
+        this.faith = faith;
     }
 
     /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     *                                                                    *
-    *                       Buy and Level-Up Methods                     *
+    *                   Buy, Level-Up, and Equip Methods                 *
     *                                                                    *
     =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    public void addRunes(int runes){
+        this.runes += runes;
+    }
 
     public void buyWeapon(Weapon W, int runeCost){
         this.inventory.add(W);
         this.runes -= runeCost;
+    }
+
+    public void equipWeapon(String weaponName){
+        for(Weapon i : inventory){
+            if(weaponName.equals(i.getWeaponName())){
+                this.equippedWeapon = i;
+            }
+        }
     }
 
     public void levelUp(int runeCost){
@@ -164,19 +182,25 @@ public class Player {
         this.battleHealth = 100 * (health + equippedWeapon.getWeapon_HP()) / 2;
     }
 
-    public void attack(Enemy E, String atkType){
-        switch (atkType) {
-            case "PHYSICAL" -> E.takeDamage((int)((strength + equippedWeapon.getWeapon_STR()) * E.getPhysicalDefense()));
-            case "SORCERY" -> E.takeDamage((int)((intelligence + equippedWeapon.getWeapon_INT()) * E.getSorceryDefense()));
-            case "INCANTATION" -> E.takeDamage((int)((faith + equippedWeapon.getWeapon_FTH()) * E.getIncantationDefense()));
-        }
-    }
+    //Method for attacking both enemies and bosses
+    //Both classes extend the Game_Entity class
+    public void attack(Hostile_Entity G, String atkType){
 
-    public void attack(Boss B, String atkType){
+        //Initialized to 0 in case the player does not have an equipped weapon
+        int weapon_STR = 0;
+        int weapon_INT = 0;
+        int weapon_FTH = 0;
+
+        if(equippedWeapon != null){
+            weapon_STR = equippedWeapon.getWeapon_STR();
+            weapon_INT = equippedWeapon.getWeapon_INT();
+            weapon_FTH = equippedWeapon.getWeapon_FTH();
+        }
+
         switch (atkType) {
-            case "PHYSICAL" -> B.takeDamage((int)((strength + equippedWeapon.getWeapon_STR()) * B.getPhysicalDefense()));
-            case "SORCERY" -> B.takeDamage((int)((intelligence + equippedWeapon.getWeapon_INT()) * B.getSorceryDefense()));
-            case "INCANTATION" -> B.takeDamage((int)((faith + equippedWeapon.getWeapon_FTH()) * B.getIncantationDefense()));
+            case "PHYSICAL" -> G.takeDamage((int)((strength + weapon_STR) * G.getPhysicalDefense()));
+            case "SORCERY" -> G.takeDamage((int)((intelligence + weapon_INT) * G.getSorceryDefense()));
+            case "INCANTATION" -> G.takeDamage((int)((faith + weapon_FTH) * G.getIncantationDefense()));
         }
     }
 
@@ -184,8 +208,8 @@ public class Player {
         this.battleHealth -= damage;
     }
 
-    public void setDodgeChance(){
-        this.dodgeChance =  20 + (endurance + equippedWeapon.getWeapon_END() / 2) / 100;
+    public int getDodgeChance(){
+        return 20 + (endurance + equippedWeapon.getWeapon_END() / 2) / 100;
     }
 
 }
