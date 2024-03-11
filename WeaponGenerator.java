@@ -4,7 +4,7 @@ import java.util.Map;
 public class WeaponGenerator {
 
     // Format: name, dexterity, cost, hp, end, str, intel, fth
-    public HashMap<String, Weapon> fillInventoryMap() {
+    public WeaponGenerator(Shop S) {
         HashMap<String, Weapon> weaponMap = new HashMap<>();
 
         addWeapon(weaponMap, "Short Sword", 13, 1000, 0, 15, 15, 15, 15);
@@ -32,7 +32,7 @@ public class WeaponGenerator {
         addWeapon(weaponMap, "Golden Order Seal", 14, 10000, 20, 55, 0, 65, 65);
         addWeapon(weaponMap, "Dragon Communion Seal", 18, 15000, 25, 60, 0, 75, 80);
 
-        return weaponMap;
+        S.setShopItems(weaponMap);
     }
 
     private void addWeapon(Map<String, Weapon> weaponMap, String name, int dexterity, int cost, int hp, int end, int str, int intel, int fth) {
