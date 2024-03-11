@@ -1,14 +1,20 @@
 import java.util.HashMap;
 
 public class Shop {
-    private final HashMap<String, Weapon> Weapons;
+    private HashMap<String, Weapon> Weapons;
 
     /**
      * Upon instantiation, the Shop's list of weapons is defined
      */
     public Shop(){
-        WeaponGenerator Generator = new WeaponGenerator();
-        this.Weapons =  Generator.fillInventoryMap();
+        new WeaponGenerator(this);
+    }
+
+    /**
+     * Sets the Shop's weapon list
+     */
+    public void setShopItems(HashMap<String, Weapon> Weapons){
+        this.Weapons = Weapons;
     }
 
     /**
