@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.List;
 
 public class Player {
@@ -165,11 +164,19 @@ public class Player {
         this.battleHealth = 100 * (health + equippedWeapon.getWeapon_HP()) / 2;
     }
 
-    public void attackEnemy(Enemy E, String atkType){
+    public void attack(Enemy E, String atkType){
         switch (atkType) {
             case "PHYSICAL" -> E.takeDamage((int)((strength + equippedWeapon.getWeapon_STR()) * E.getPhysicalDefense()));
             case "SORCERY" -> E.takeDamage((int)((intelligence + equippedWeapon.getWeapon_INT()) * E.getSorceryDefense()));
             case "INCANTATION" -> E.takeDamage((int)((faith + equippedWeapon.getWeapon_FTH()) * E.getIncantationDefense()));
+        }
+    }
+
+    public void attack(Boss B, String atkType){
+        switch (atkType) {
+            case "PHYSICAL" -> B.takeDamage((int)((strength + equippedWeapon.getWeapon_STR()) * B.getPhysicalDefense()));
+            case "SORCERY" -> B.takeDamage((int)((intelligence + equippedWeapon.getWeapon_INT()) * B.getSorceryDefense()));
+            case "INCANTATION" -> B.takeDamage((int)((faith + equippedWeapon.getWeapon_FTH()) * B.getIncantationDefense()));
         }
     }
 
