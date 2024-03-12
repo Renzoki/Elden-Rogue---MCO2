@@ -5,12 +5,11 @@ public class Enemy extends Hostile_Entity {
     private final int enemyType; //Type 1, 2, or 3
 
     public Enemy(int areaIndex){
-        new EnemyGenerator(this, areaIndex);
         Random R = new Random();
-
         this.areaIndex = areaIndex;
         this.enemyType = R.nextInt(3);
 
+        new EnemyGenerator(this, areaIndex, enemyType);
         this.runeDrop = health * 2;
     }
 
@@ -21,5 +20,4 @@ public class Enemy extends Hostile_Entity {
         Random R = new Random();
         setDamage(ENEMY_ATK_VALUES[enemyType][R.nextInt(2)] * areaIndex);
         return ENEMY_ATK_VALUES[enemyType][R.nextInt(2)] * areaIndex;
-    }
-}
+    }}
