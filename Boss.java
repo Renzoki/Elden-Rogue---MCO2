@@ -4,8 +4,9 @@ public class Boss extends Hostile_Entity {
     private final int areaIndex; //From where the Boss is from
 
     public Boss(int areaIndex){
-        new BossGenerator(this, areaIndex);
         this.areaIndex = areaIndex;
+
+        new BossGenerator(this, areaIndex);
         this.runeDrop = health * 5;
     }
 
