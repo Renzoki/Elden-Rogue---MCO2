@@ -28,10 +28,6 @@ public class Hostile_Entity {
         this.damage = damage;
     }
 
-    public int calculateDamage(){
-        return 0;
-    }
-
     /*=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     *                                                                    *
     *                           Getter Methods                           *
@@ -82,9 +78,9 @@ public class Hostile_Entity {
     }
 
     //Returns true if the player cannot dodge
-    public boolean checkDodgeChance(Player P){
+    public boolean canPlayerDodge(Player P){
         Random R = new Random();
-        return R.nextInt(101) > P.getDodgeChance();
+        return R.nextInt(101) < P.getDodgeChance();
     }
 
     //Gives the player runes upon defeating an enemy
