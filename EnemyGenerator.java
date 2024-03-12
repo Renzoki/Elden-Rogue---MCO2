@@ -4,11 +4,11 @@ public class EnemyGenerator {
     private final int areaIndex;
     private final int enemyType;
 
-    public EnemyGenerator(Enemy E, int areaIndex){
+    public EnemyGenerator(Enemy E, int areaIndex, int enemyType){
         Random R = new Random();
 
         this.areaIndex = areaIndex;
-        this.enemyType = R.nextInt(3);
+        this.enemyType = enemyType;
 
         setName(E);
         setDefense(E);
