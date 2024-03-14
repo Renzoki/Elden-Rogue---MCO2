@@ -20,7 +20,7 @@ public class Shop {
     /**
      * This method allows the player to buy if they have
      * enough runes. It then places the runes in their inventory
-     * and reduces their runes by the weapon runecost.
+     * and reduces their runes by the weapon runeCost.
      */
     public void buyWeapon(Player P, String weaponName){
         Weapon W = Weapons.get(weaponName);
@@ -40,7 +40,7 @@ public class Shop {
     /**
      * Getter Method for all weapons (For Display)
      */
-    public HashMap<String, Weapon> Weapons(){
+    public HashMap<String, Weapon> getWeapons(){
         return Weapons;
     }
 }
