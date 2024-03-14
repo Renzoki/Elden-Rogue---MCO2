@@ -1,5 +1,4 @@
 public class PlayerManager {
-     //LevelUp
 
     public void addRunes(Player P, int runes){
         P.setRunes(P.getRunes() + runes);
@@ -11,39 +10,70 @@ public class PlayerManager {
     }
 
     public void equipWeapon(Player P, String weaponName){
+
+        //Unequip weapon if player has one equipped
+        if(P.getEquippedWeapon() != null){
+            unequipWeapon(P);
+        }
+
         for(Weapon i : P.getInventory()){
             if(weaponName.equals(i.getWeaponName())){
                 P.setEquippedWeapon(i);
+                P.setHealth(P.getHealth() + P.getEquippedWeapon().getWeapon_HP());
+                P.setIntelligence(P.getIntelligence() + P.getEquippedWeapon().getWeapon_INT());
+                P.setEndurance(P.getEndurance() + P.getEquippedWeapon().getWeapon_END());
+                P.setStrength(P.getStrength() + P.getEquippedWeapon().getWeapon_STR());
+                P.setFaith(P.getFaith() + P.getEquippedWeapon().getWeapon_FTH());
             }
         }
     }
 
-    public void levelUp(Player P, int runeCost){
-        P.setLevel(P.getLevel() + 1);
-        P.setRunes(P.getRunes() - runeCost);
+    private void unequipWeapon(Player P){
+        //Remove weapon stats from player stats
+        P.setHealth(P.getHealth() - P.getEquippedWeapon().getWeapon_HP());
+        P.setIntelligence(P.getIntelligence() - P.getEquippedWeapon().getWeapon_INT());
+        P.setEndurance(P.getEndurance() - P.getEquippedWeapon().getWeapon_END());
+        P.setStrength(P.getStrength() - P.getEquippedWeapon().getWeapon_STR());
+        P.setFaith(P.getFaith() - P.getEquippedWeapon().getWeapon_FTH());
     }
 
-    public void levelUpHealth(Player P) {
+    public void levelUp(Player P, String attribute){
+        int runeCost = (P.getLevel() * 100) / 2;
+
+        P.setLevel(P.getLevel() + 1);
+        P.setRunes(P.getRunes() - runeCost);
+
+        switch (attribute) {
+            case "HP" -> levelUpHealth(P);
+            case "DEX" -> levelUpDexterity(P);
+            case "INT" -> levelUpIntelligence(P);
+            case "END" -> levelUpEndurance(P);
+            case "STR" -> levelUpStrength(P);
+            case "FTH" -> levelUpFaith(P);
+        }
+    }
+
+    private void levelUpHealth(Player P) {
         P.setHealth(P.getHealth() + 1);
     }
 
-    public void levelUpDexterity(Player P) {
+    private void levelUpDexterity(Player P) {
         P.setDexterity(P.getDexterity() + 1);
     }
 
-    public void levelUpIntelligence(Player P) {
+    private void levelUpIntelligence(Player P) {
         P.setIntelligence(P.getIntelligence() + 1);
     }
 
-    public void levelUpEndurance(Player P) {
+    private void levelUpEndurance(Player P) {
         P.setEndurance(P.getEndurance() + 1);
     }
 
-    public void levelUpStrength(Player P) {
+    private void levelUpStrength(Player P) {
         P.setStrength(P.getStrength() + 1);
     }
 
-    public void levelUpFaith(Player P) {
+    private void levelUpFaith(Player P) {
         P.setFaith(P.getFaith() + 1);
     }
 
