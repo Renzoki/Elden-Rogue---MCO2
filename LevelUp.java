@@ -4,20 +4,13 @@ public class LevelUp {
     private int runeCost = 0;
 
     /**
-     * Upon instantiation, the object levels up the given
-     * player in the parameter based on the given attribute in the parameter.
+     * Method for leveling up the Player given a Player object
+     * and Attribute
      */
-    public LevelUp(Player P, String attribute){
+    public void levelUp(Player P, String attribute){
         runeCost = (P.getLevel() * 100) / 2;
-        P.levelUp(runeCost);
-
-        switch (attribute) {
-            case "HP" -> P.levelUpHealth();
-            case "DEX" -> P.levelUpDexterity();
-            case "INT" -> P.levelUpIntelligence();
-            case "END" -> P.levelUpEndurance();
-            case "STR" -> P.levelUpStrength();
-            case "FTH" -> P.levelUpFaith();
+        if(hasEnoughRunes(P)) {
+            P.levelUp(attribute);
         }
     }
 
@@ -26,5 +19,12 @@ public class LevelUp {
      */
     public int getRuneCost(){
         return runeCost;
+    }
+
+    /**
+     * This method checks if the player has enough runes to level up
+     */
+    private boolean hasEnoughRunes(Player P){
+        return P.getRunes() > runeCost;
     }
 }
