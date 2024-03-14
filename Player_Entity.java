@@ -31,57 +31,57 @@ public class Player_Entity {
     =-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
     //Player attributes
-    protected String getName(){
+    public String getName(){
         return playerName;
     }
 
-    protected String getJob(){
+    public String getJob(){
         return playerJob;
     }
 
-    protected int getRunes(){
+    public int getRunes(){
         return runes;
     }
 
     //Player stats
-    protected int getLevel(){
+    public int getLevel(){
         return level;
     }
 
-    protected int getHealth() {
+    public int getHealth() {
         return health;
     }
 
-    protected int getDexterity() {
+    public int getDexterity() {
         return dexterity;
     }
 
-    protected int getIntelligence() {
+    public int getIntelligence() {
         return intelligence;
     }
 
-    protected int getEndurance() {
+    public int getEndurance() {
         return endurance;
     }
 
-    protected int getStrength() {
+    public int getStrength() {
         return strength;
     }
 
-    protected int getFaith() {
+    public int getFaith() {
         return faith;
     }
 
     //Player Battle Values
-    protected int getBattleHealth(){
+    public int getBattleHealth(){
         return battleHealth;
     }
 
-    protected Weapon getEquippedWeapon(){
+    public Weapon getEquippedWeapon(){
         return equippedWeapon;
     }
 
-    protected List<Weapon> getInventory(){
+    public List<Weapon> getInventory(){
         return inventory;
     }
 
@@ -134,4 +134,5 @@ public class Player_Entity {
     protected void setBattleHealth(int Health){
         this.battleHealth = Health;
     }
+
 }
