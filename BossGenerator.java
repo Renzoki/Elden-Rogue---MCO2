@@ -33,7 +33,7 @@ public class BossGenerator {
         double[][] BOSS_DEFENSE = {{0.35, 0.20, 0.15}, {0.15, 0.35, 0.25}, {0.25, 0.50, 0.40}};
 
         B.setPhyDef(BOSS_DEFENSE[areaIndex - 1][0]);
-        B.setPhyDef(BOSS_DEFENSE[areaIndex - 1][1]);
-        B.setSorDef(BOSS_DEFENSE[areaIndex - 1][2]);
+        B.setSorDef(BOSS_DEFENSE[areaIndex - 1][1]);
+        B.setIncDef(BOSS_DEFENSE[areaIndex - 1][2]);
     }
 }
