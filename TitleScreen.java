@@ -1,57 +1,164 @@
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class TitleScreen extends JFrame {
-    JButton button;
-    
-    public TitleScreen() {
-        JLabel background;
+    private static final String NORMAL_START_PATH = "normalStart.png";
+    private static final String HOVER_START_PATH = "hoverStart.png";
+    private static final String NORMAL_QUIT_PATH = "normalQuit.png";
+    private static final String HOVER_QUIT_PATH = "hoverQuit.png";
+    private static final String CLICK_SOUND_PATH = "The Final Battle (Elden Ring Soundtrack) (feat. Reven).wav"; // Path to your sound file
+    private JButton startButton;
+    private JButton quitButton;
+    private CharacCreation characterCreation;
+    private Clip clickSound; // Clip object to play the sound
 
+    public TitleScreen() {
         // Frame setup
         this.setTitle("Title Screen");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setSize(920, 580);
-        
+        this.setLocationRelativeTo(null);
+
+        loadClickSound();
+
         // Background image
         ImageIcon backgroundImage = new ImageIcon("eldenbackground.png");
         Image imgBackground = backgroundImage.getImage().getScaledInstance(920, 580, Image.SCALE_SMOOTH);
         ImageIcon scaledBackgroundImage = new ImageIcon(imgBackground);
-        background = new JLabel("", scaledBackgroundImage, JLabel.CENTER);
+        JLabel background = new JLabel("", scaledBackgroundImage, JLabel.CENTER);
         this.setContentPane(background);
-        
+
         // Title image on top
         ImageIcon titleImage = new ImageIcon("eldentext.png");
-        Image imgTitle = titleImage.getImage().getScaledInstance(700, 420, Image.SCALE_SMOOTH);
+        Image imgTitle = titleImage.getImage().getScaledInstance(800, 500, Image.SCALE_SMOOTH);
         ImageIcon scaledTitleImage = new ImageIcon(imgTitle);
         JLabel titleLabel = new JLabel(scaledTitleImage);
-        titleLabel.setBounds(185, 0, 550, 280); // Set the position and size of the title image
+        titleLabel.setBounds(138, 65, 630, 290); // Set the position of the title image
         this.add(titleLabel);
+
+        // Normal Start Game Button
+        ImageIcon normalStartIcon = new ImageIcon(new ImageIcon(NORMAL_START_PATH).getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH));
+        Image scaledNormalStartImage = normalStartIcon.getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH);
+        startButton = new JButton(new ImageIcon(scaledNormalStartImage));
+        startButton.setBounds(351, 320, 240, 70); // Set button position and size
+        startButton.setBorder(BorderFactory.createEmptyBorder());
+        this.add(startButton);
+
+        // Normal Quit Game Button
+        ImageIcon normalQuitIcon = new ImageIcon(new ImageIcon(NORMAL_QUIT_PATH).getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH));
+        Image scaledNormalQuitImage = normalQuitIcon.getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH);
+        quitButton = new JButton(new ImageIcon(scaledNormalQuitImage));
+        quitButton.setBounds(357, 387, 240, 70);
+        quitButton.setBorder(BorderFactory.createEmptyBorder());
+        this.add(quitButton);
+
+        // Preload the hover icons with scaled dimensions
+        ImageIcon hoverStartIcon = new ImageIcon(new ImageIcon(HOVER_START_PATH).getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH));
+        ImageIcon hoverQuitIcon = new ImageIcon(new ImageIcon(HOVER_QUIT_PATH).getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH));
+
+
+        // Add mouse listener for start button hover effect
+        startButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {}
         
+            @Override
+            public void mousePressed(MouseEvent e) {}
+        
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+        
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                startButton.setIcon(hoverStartIcon);
+            }
+        
+            @Override
+            public void mouseExited(MouseEvent e) {
+                startButton.setIcon(normalStartIcon); // Reset to normal icon when mouse exits
+            }
+            });
+
+            // Add mouse listener for quit button hover effect
+            quitButton.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {}
+            
+                @Override
+                public void mousePressed(MouseEvent e) {}
+            
+                @Override
+                public void mouseReleased(MouseEvent e) {}
+            
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    quitButton.setIcon(hoverQuitIcon);
+                }
+            
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    quitButton.setIcon(normalQuitIcon); // Reset to normal icon when mouse exits
+                }
+            });
+
+        // Add action listener for start button
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open CharacterCreation window when start button is clicked
+                if (characterCreation == null) {
+                    characterCreation = new CharacCreation();
+                }
+                characterCreation.setVisible(true);
+            }
+        });
+
+        // Add action listener for quit button
+        quitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Exit the application when quit button is clicked
+                System.exit(0);
+            }
+        });
+        playClickSound(); // Automatically play the click sound
+
         this.setVisible(true);
     }
-    
-    public void paint(Graphics g) {
-        //Start Game
-        super.paint(g);
-        String text = "Start Game";
-        Font textFont = new Font("Mantinia", Font.BOLD, 36);
-        //Its shadow color
-        g.setColor(Color.BLACK);
-        g.drawString(text, 400, 800);
-        //Its main color
-        g.setColor(Color.decode("#C6A764"));
-        g.setFont(textFont);
-        g.drawString(text, 340, 380); // Adjust the position of the text as needed
+
+    private void loadClickSound() {
+        try {
+            File soundFile = new File(CLICK_SOUND_PATH);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+            clickSound = AudioSystem.getClip();
+            clickSound.open(audioInputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void playClickSound() {
+        if (clickSound != null) {
+            clickSound.setFramePosition(0); // Rewind the sound
+            clickSound.start(); // Play the sound
+        }
     }
 
     public static void main(String[] args) {
         new TitleScreen();
+        
     }
-}
+} 
