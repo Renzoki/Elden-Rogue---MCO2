@@ -5,67 +5,71 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter; 
 import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class FastTravel extends JFrame {
     private static final String NORMAL_STORMVEIL_PATH = "StormNormal.png";
+    private static final String NOTCLEARED_STORMVEIL_PATH = "NCStorm.png";
     private static final String HOVER_STORMVEIL_PATH = "StormHover.png";
     private static final String NOTCLEARED_RAYA_PATH = "RayaNotCleared.png";
-    // private static final String HOVER_STORMVEIL_PATH = "StormHover.png";
-    private static final String BACK_BUTTON = "backButton.png";
-    private static final String FAST_TRAVEL_TEXT = "FastTravelText.png";
+    private static final String NORMAL_RAYA_PATH = "RayaNormal.png";
+    private static final String HOVER_RAYA_PATH = "RayaHover.png";
+    private static final String LOCKED_ELDENTHRONE_PATH = "lockedEldenThrone.png";
+    // private static final String NOTCLEARED_ELDENTHRONE_PATH = "notclearedEldenThrone.png";
+    // private static final String NORMAL_ELDENTHRONE_PATH = "normalEldenThrone.png";
+    // private static final String HOVER_ELDENTHRONE_PATH = "hoverEldenThrone.png";
     private JButton NormalStormButton;
+    private JButton NormalRayaButton;
     private JButton NCRayaButton;
+    private JButton NCStormButton;
+    private JButton lockedThroneButton;
     private JButton backButton;
-    private JButton fastTravelTextButton;
-       
-    public FastTravel() {
-        JLabel background;
+    private JLabel fastTravelText;
+    private GameLobby gameLobby;
+    private MouseListener normalStormMouseListener;
+    private MouseListener normalRayaMouseListener;
+    private boolean isNormal = false;
+    private FTConstants ftconstants;
+    private JLabel background;
+    private JLabel eoeLabel;
+    private JLabel mapLabel;
+    private JLabel opacityBGLabel;
+    private JLabel titleLabel;
 
+    public FastTravel() {
+        this.ftconstants = new FTConstants();
+        
         // Frame setup
         this.setTitle("Fast Travel");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setSize(920, 580);
         this.setLocationRelativeTo(null);
-        
+
         // Background image
-        ImageIcon backgroundImage = new ImageIcon("CharacCreationBackground.jpeg");
-        Image imgBackground = backgroundImage.getImage().getScaledInstance(920, 580, Image.SCALE_SMOOTH);
-        ImageIcon scaledBackgroundImage = new ImageIcon(imgBackground);
-        background = new JLabel("", scaledBackgroundImage, JLabel.CENTER);
+        this.background = ftconstants.getFTBackground();
         this.setContentPane(background);
 
         // Back Button
-        ImageIcon backIcon = new ImageIcon(BACK_BUTTON);
-        Image scaledBackImage = backIcon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
-        backButton = new JButton(new ImageIcon(scaledBackImage));
-        backButton.setBounds(22, 2, 70, 70); // Set button position and size
-        backButton.setBorder(BorderFactory.createEmptyBorder());
+        this.backButton = ftconstants.getbackButton();
         this.add(backButton);
 
-        // Fast Travel Text Button
-        ImageIcon fastTravelIcon = new ImageIcon(FAST_TRAVEL_TEXT);
-        Image scaledFastTravelImage = fastTravelIcon.getImage().getScaledInstance(170, 55, Image.SCALE_SMOOTH);
-        fastTravelTextButton = new JButton(new ImageIcon(scaledFastTravelImage));
-        fastTravelTextButton.setBounds(150, 8, 170, 55); // Set button position and size
-        fastTravelTextButton.setBorder(BorderFactory.createEmptyBorder());
-        this.add(fastTravelTextButton);
+        // Fast Travel Text
+        this.fastTravelText = ftconstants.getFTText();
+        this.add(fastTravelText);
 
-        // Elden Throne image
-        ImageIcon throneImage = new ImageIcon("EldenThrone.png");
-        Image scaledThroneImage = throneImage.getImage().getScaledInstance(180, 160, Image.SCALE_SMOOTH);
-        ImageIcon scaledETImage = new ImageIcon(scaledThroneImage);
-        JLabel ETLabel = new JLabel(scaledETImage);
-        ETLabel.setBounds(692, 42, 180, 160); // Set the position of the title image
-        this.add(ETLabel);
+        // Locked Button
+        ImageIcon throneImage = new ImageIcon(new ImageIcon(LOCKED_ELDENTHRONE_PATH).getImage().getScaledInstance(180, 160, Image.SCALE_SMOOTH));
+        lockedThroneButton = new JButton(throneImage);
+        lockedThroneButton.setBounds(692, 45, 180, 160); // Set button position and size
+        lockedThroneButton.setBorder(BorderFactory.createEmptyBorder());
+        this.add(lockedThroneButton);
 
         // Echoes of Elden image
-        ImageIcon echoesImage = new ImageIcon("EchoesOfElden.png");
-        Image scaledEchoesImage = echoesImage.getImage().getScaledInstance(420, 490, Image.SCALE_SMOOTH);
-        ImageIcon scaledEOEImage = new ImageIcon(scaledEchoesImage);
-        JLabel eoeLabel = new JLabel(scaledEOEImage);
-        eoeLabel.setBounds(15, 55, 420, 490); // Set the position of the title image
+        this.eoeLabel = ftconstants.getEchoesofElden();
         this.add(eoeLabel);
 
         // Not Cleared Raya Lucaria Button
@@ -74,69 +78,158 @@ public class FastTravel extends JFrame {
         NCRayaButton.setBounds(447, 94, 180, 160); // Set button position and size
         NCRayaButton.setBorder(BorderFactory.createEmptyBorder());
         this.add(NCRayaButton);
-        
-        // Normal Stormveil Button
+
+        // Normal Raya Lucaria Button initially hidden
+        ImageIcon normalRayaIcon = new ImageIcon(new ImageIcon(NORMAL_RAYA_PATH).getImage().getScaledInstance(180, 160, Image.SCALE_SMOOTH));
+        NormalRayaButton = new JButton(normalRayaIcon);
+        NormalRayaButton.setBounds(447, 94, 180, 160); // Set button position and size
+        NormalRayaButton.setBorder(BorderFactory.createEmptyBorder());
+        NormalRayaButton.setVisible(false); // Initially hidden
+        this.add(NormalRayaButton);
+
+        // Not Cleared Stormveil Button
+        ImageIcon unclearedStormIcon = new ImageIcon(new ImageIcon(NOTCLEARED_STORMVEIL_PATH).getImage().getScaledInstance(180, 160, Image.SCALE_SMOOTH));
+        NCStormButton = new JButton(unclearedStormIcon);
+        NCStormButton.setBounds(620, 320, 180, 160); // Set button position and size
+        NCStormButton.setBorder(BorderFactory.createEmptyBorder());
+        this.add(NCStormButton);
+
+        // Normal Stormveil Button initially hidden
         ImageIcon normalStormIcon = new ImageIcon(new ImageIcon(NORMAL_STORMVEIL_PATH).getImage().getScaledInstance(180, 160, Image.SCALE_SMOOTH));
         NormalStormButton = new JButton(normalStormIcon);
         NormalStormButton.setBounds(620, 320, 180, 160); // Set button position and size
         NormalStormButton.setBorder(BorderFactory.createEmptyBorder());
+        NormalStormButton.setVisible(false); // Initially hidden
         this.add(NormalStormButton);
 
         // Map image
-        ImageIcon mapImage = new ImageIcon("EldenMap.png");
-        Image scaledMapImage = mapImage.getImage().getScaledInstance(530, 560, Image.SCALE_SMOOTH);
-        ImageIcon scaledMapImageIcon = new ImageIcon(scaledMapImage);
-        JLabel mapLabel = new JLabel(scaledMapImageIcon);
-        mapLabel.setBounds(390, 0, 530, 560); // Set the position of the title image
+        this.mapLabel = ftconstants.getMapImage();
         this.add(mapLabel);
 
         // Opacity Background image
-        ImageIcon backgroundImage1 = new ImageIcon("CharacBG.png");
-        Image imgBackground1 = backgroundImage1.getImage().getScaledInstance(920, 580, Image.SCALE_SMOOTH);
-        ImageIcon scaledBackgroundImage1 = new ImageIcon(imgBackground1);
-        JLabel backLabel = new JLabel(scaledBackgroundImage1);
-        backLabel.setBounds(0, 0, 920, 580); // Set the position of the title image
-        this.add(backLabel);
-        
+        this.opacityBGLabel = ftconstants.getOpacityBG();
+        this.add(opacityBGLabel);
+
         // Title image on top
-        ImageIcon titleImage = new ImageIcon("header.png");
-        Image imgTitle = titleImage.getImage().getScaledInstance(940, 92, Image.SCALE_SMOOTH);
-        ImageIcon scaledTitleImage = new ImageIcon(imgTitle);
-        JLabel titleLabel = new JLabel(scaledTitleImage);
-        titleLabel.setBounds(0, 0, 930, 80); // Set the position of the title image
+        this.titleLabel = ftconstants.getTitleIMG();
         this.add(titleLabel);
 
-        
+        ImageIcon hoverUnclearedStormIcon = new ImageIcon(new ImageIcon(HOVER_STORMVEIL_PATH).getImage().getScaledInstance(180, 160, Image.SCALE_SMOOTH));
+        ImageIcon hoverNormalStormIcon = new ImageIcon(new ImageIcon(HOVER_STORMVEIL_PATH).getImage().getScaledInstance(180, 160, Image.SCALE_SMOOTH));
+        ImageIcon hoverUnclearedRayaIcon = new ImageIcon(new ImageIcon(HOVER_RAYA_PATH).getImage().getScaledInstance(180, 160, Image.SCALE_SMOOTH));
+        ImageIcon hoverNormalRayaIcon = new ImageIcon(new ImageIcon(HOVER_RAYA_PATH).getImage().getScaledInstance(180, 160, Image.SCALE_SMOOTH));
 
-        // Preload the hover icons with scaled dimensions
-        ImageIcon hoverStormIcon = new ImageIcon(new ImageIcon(HOVER_STORMVEIL_PATH).getImage().getScaledInstance(180, 160, Image.SCALE_SMOOTH));
+        NCStormButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Toggle between uncleared and normal storm button
+                if (!isNormal) {
+                    NCStormButton.setVisible(false);
+                    NormalStormButton.setVisible(true);
+                    isNormal = true;
+                    NCStormButton.removeMouseListener(this); // Remove the listener after it's clicked once
+                    NormalStormButton.addMouseListener(normalStormMouseListener); // Add the listener to the normal button
+                }
+            }
 
-        NormalStormButton.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {}
-        
+            public void mousePressed(MouseEvent e) {
+            }
+
             @Override
-            public void mousePressed(MouseEvent e) {}
-        
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-        
+            public void mouseReleased(MouseEvent e) {
+            }
+
             @Override
             public void mouseEntered(MouseEvent e) {
-                NormalStormButton.setIcon(hoverStormIcon);
+                NCStormButton.setIcon(hoverUnclearedStormIcon);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                NCStormButton.setIcon(unclearedStormIcon); // Reset to normal icon when mouse exits
+            }
+        });
+
+        normalStormMouseListener = new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                NormalStormButton.setIcon(hoverNormalStormIcon);
             }
         
             @Override
             public void mouseExited(MouseEvent e) {
                 NormalStormButton.setIcon(normalStormIcon); // Reset to normal icon when mouse exits
             }
-            });
+        };
+        
 
+        // Add the listener to the normal button initially
+        NormalStormButton.addMouseListener(normalStormMouseListener);
+
+        NCRayaButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Toggle between uncleared and normal storm button
+                if (!isNormal) {
+                    NCRayaButton.setVisible(false);
+                    NormalRayaButton.setVisible(true);
+                    isNormal = true;
+                    NCRayaButton.removeMouseListener(this); // Remove the listener after it's clicked once
+                    NormalRayaButton.addMouseListener(normalRayaMouseListener); // Add the listener to the normal button
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                NCRayaButton.setIcon(hoverUnclearedRayaIcon);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                NCRayaButton.setIcon(unclearedStormIcon); // Reset to normal icon when mouse exits
+            }
+        });
+
+        normalRayaMouseListener = new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                NormalRayaButton.setIcon(hoverNormalRayaIcon);
+            }
+        
+            @Override
+            public void mouseExited(MouseEvent e) {
+                NormalRayaButton.setIcon(normalRayaIcon); // Reset to normal icon when mouse exits
+            }
+        };
+        
+
+        // Add the listener to the normal button initially
+        NormalRayaButton.addMouseListener(normalRayaMouseListener);
 
         this.setVisible(true);
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open TitleScreen window when back button is clicked
+                if (gameLobby == null) {
+                    gameLobby = new GameLobby();
+                }
+                gameLobby.setVisible(true);
+            }
+        });
     }
 
     public static void main(String[] args) {
-        new FastTravel();    
+        new FastTravel();
     }
 }
