@@ -222,7 +222,7 @@ public class FastTravel extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Open TitleScreen window when back button is clicked
                 if (gameLobby == null) {
-                    gameLobby = new GameLobby();
+                    gameLobby = new GameLobby("DefaultName", "DefaultCharacter");
                 }
                 gameLobby.setVisible(true);
             }

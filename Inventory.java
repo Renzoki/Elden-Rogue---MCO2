@@ -7,17 +7,18 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class Shop extends JFrame {
+
+public class Inventory extends JFrame {
     private static final String BACK_BUTTON = "backButton.png";
     private JLabel Text;
     private JLabel background;
     private JButton backButton;
     private GameLobby gameLobby;
 
-    public Shop() {
+    public Inventory() {
         
         // Frame setup
-        this.setTitle("Shop");
+        this.setTitle("Inventory");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setSize(920, 580);
@@ -38,21 +39,21 @@ public class Shop extends JFrame {
         backButton.setBorder(BorderFactory.createEmptyBorder());
         this.add(backButton);
 
-        // Shop Text
-        ImageIcon CCIcon = new ImageIcon("ShopText.png");
-        Image CCImage = CCIcon.getImage().getScaledInstance(100, 60, Image.SCALE_SMOOTH);
+        // Inventory Text
+        ImageIcon CCIcon = new ImageIcon("InventoryText.png");
+        Image CCImage = CCIcon.getImage().getScaledInstance(172, 60, Image.SCALE_SMOOTH);
         ImageIcon CCText = new ImageIcon(CCImage);
         Text = new JLabel("", CCText, JLabel.CENTER);
-        Text.setBounds(160, 8, 100, 60); 
+        Text.setBounds(160, 8, 172, 60); 
         this.add(Text);
 
-        // Shop Equipment Frame Image
-        ImageIcon shopFrameImage = new ImageIcon("ShopFrame.png");
-        Image shopFrame = shopFrameImage.getImage().getScaledInstance(800, 465, Image.SCALE_SMOOTH);
-        ImageIcon scaledShopFrameImage = new ImageIcon(shopFrame);
-        JLabel shopFLabel = new JLabel(scaledShopFrameImage);
-        shopFLabel.setBounds(62, 81, 800, 465); // Set the position of the title image
-        this.add(shopFLabel);        
+        // Owned Equipment Holder Image
+        ImageIcon ownedInventoryImage = new ImageIcon("OwnedInventory.png");
+        Image ownedInventory = ownedInventoryImage.getImage().getScaledInstance(600, 350, Image.SCALE_SMOOTH);
+        ImageIcon scaledOwnedInventoryImage = new ImageIcon(ownedInventory);
+        JLabel OILabel = new JLabel(scaledOwnedInventoryImage);
+        OILabel.setBounds(158, 65, 600, 350); // Set the position of the title image
+        this.add(OILabel);        
         
         // Title image on top
         ImageIcon titleImage = new ImageIcon("header.png");
@@ -62,13 +63,13 @@ public class Shop extends JFrame {
         titleLabel.setBounds(0, 0, 940, 80); // Set the position of the title image
         this.add(titleLabel);
 
-        // Second Header
-        ImageIcon LevelRunesHolderImage = new ImageIcon("LevelRunesHolder.png");
-        Image holderheader = LevelRunesHolderImage.getImage().getScaledInstance(270, 45, Image.SCALE_SMOOTH);
-        ImageIcon scaledLevelRunesHolderImage = new ImageIcon(holderheader);
-        JLabel holderLabel = new JLabel(scaledLevelRunesHolderImage);
-        holderLabel.setBounds(320, 62, 270, 45); // Set the position of the title image
-        this.add(holderLabel);
+        // Equipped Equipment Holder Image
+        ImageIcon EquippedHolderImage = new ImageIcon("EquippedInventory.png");
+        Image equippedholderheader = EquippedHolderImage.getImage().getScaledInstance(508, 120, Image.SCALE_SMOOTH);
+        ImageIcon scaledEquippedHolderImage = new ImageIcon(equippedholderheader);
+        JLabel EILabel = new JLabel(scaledEquippedHolderImage);
+        EILabel.setBounds(205, 405, 508, 120); // Set the position of the title image
+        this.add(EILabel);
 
         // Opacity Background image
         ImageIcon backgroundImage1 = new ImageIcon("CharacBG.png");
@@ -92,7 +93,7 @@ public class Shop extends JFrame {
         });
     }
     public static void main(String[] args) {
-        new Shop();
+        new Inventory();
         
     }
 }

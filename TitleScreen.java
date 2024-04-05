@@ -22,7 +22,7 @@ public class TitleScreen extends JFrame {
     private JButton startButton;
     private JButton quitButton;
     private CharacCreation characterCreation;
-    private Clip clickSound; // Clip object to play the sound
+    private Clip clickSound;
 
     public TitleScreen() {
         // Frame setup
@@ -53,7 +53,7 @@ public class TitleScreen extends JFrame {
         ImageIcon normalStartIcon = new ImageIcon(new ImageIcon(NORMAL_START_PATH).getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH));
         Image scaledNormalStartImage = normalStartIcon.getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH);
         startButton = new JButton(new ImageIcon(scaledNormalStartImage));
-        startButton.setBounds(351, 320, 240, 70); // Set button position and size
+        startButton.setBounds(344, 320, 240, 70); // Set button position and size
         startButton.setBorder(BorderFactory.createEmptyBorder());
         this.add(startButton);
 
@@ -61,7 +61,7 @@ public class TitleScreen extends JFrame {
         ImageIcon normalQuitIcon = new ImageIcon(new ImageIcon(NORMAL_QUIT_PATH).getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH));
         Image scaledNormalQuitImage = normalQuitIcon.getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH);
         quitButton = new JButton(new ImageIcon(scaledNormalQuitImage));
-        quitButton.setBounds(357, 387, 240, 70);
+        quitButton.setBounds(350, 387, 240, 70);
         quitButton.setBorder(BorderFactory.createEmptyBorder());
         this.add(quitButton);
 
@@ -70,7 +70,7 @@ public class TitleScreen extends JFrame {
         ImageIcon hoverQuitIcon = new ImageIcon(new ImageIcon(HOVER_QUIT_PATH).getImage().getScaledInstance(240, 70, Image.SCALE_SMOOTH));
 
 
-        // Add mouse listener for start button hover effect
+    
         startButton.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {}
@@ -88,11 +88,10 @@ public class TitleScreen extends JFrame {
         
             @Override
             public void mouseExited(MouseEvent e) {
-                startButton.setIcon(normalStartIcon); // Reset to normal icon when mouse exits
+                startButton.setIcon(normalStartIcon); 
             }
             });
 
-            // Add mouse listener for quit button hover effect
             quitButton.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {}
@@ -110,11 +109,11 @@ public class TitleScreen extends JFrame {
             
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    quitButton.setIcon(normalQuitIcon); // Reset to normal icon when mouse exits
+                    quitButton.setIcon(normalQuitIcon); 
                 }
             });
 
-        // Add action listener for start button
+
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -126,7 +125,6 @@ public class TitleScreen extends JFrame {
             }
         });
 
-        // Add action listener for quit button
         quitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -155,10 +153,5 @@ public class TitleScreen extends JFrame {
             clickSound.setFramePosition(0); // Rewind the sound
             clickSound.start(); // Play the sound
         }
-    }
-
-    public static void main(String[] args) {
-        new TitleScreen();
-        
     }
 } 
